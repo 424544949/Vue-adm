@@ -10,20 +10,31 @@ module.exports = {
    * webpack配置,see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
    **/
   chainWebpack: (config) => {
+    const svgRule = config.module.rule("svg");     
+          svgRule.uses.clear();     
+          svgRule       
+            .use("svg-sprite-loader")       
+            .loader("svg-sprite-loader")       
+            .options({         
+              symbolId: "icon-[name]",         
+              include: ["./src/icons"]       
+            });  
+
   },
   configureWebpack: (config) => {
-    // config.resolve = { // 配置解析别名
-    //   extensions: ['.js', '.json', '.vue'],
-    //   alias: {
-    //     '@': path.resolve(__dirname, './src'),
-    //     'public': path.resolve(__dirname, './public'),
-    //     'components': path.resolve(__dirname, './src/components'),
-    //     'common': path.resolve(__dirname, './src/common'),
-    //     'api': path.resolve(__dirname, './src/api'),
-    //     'views': path.resolve(__dirname, './src/views'),
-    //     'data': path.resolve(__dirname, './src/data')
-    //   }
-    // }
+    config.resolve = { // 配置解析别名
+      extensions: ['.js', '.json', '.vue'],//自动添加文件名后缀
+      alias: {
+        'vue' : 'vue/dist/vue.js',
+        '@': path.resolve(__dirname, './src'),
+        'public': path.resolve(__dirname, './public'),
+        'components': path.resolve(__dirname, './src/components'),
+        'common': path.resolve(__dirname, './src/common'),
+        'api': path.resolve(__dirname, './src/api'),
+        'views': path.resolve(__dirname, './src/views'),
+        'data': path.resolve(__dirname, './src/data')
+      }
+    }
   },
   // 生产环境是否生成 sourceMap 文件
   productionSourceMap: false,
@@ -57,13 +68,22 @@ module.exports = {
   pwa: {},
   // webpack-dev-server 相关配置
   devServer: {
-    open: false, // 编译完成是否打开网页
-    host: '0.0.0.0', // 指定使用地址，默认localhost,0.0.0.0代表可以被外界访问
-    port: 8080, // 访问端口
-    https: false, // 编译失败时刷新页面
-    hot: true, // 开启热加载
-    hotOnly: false,
-    proxy: null, // 设置代理
+      open: false, // 编译完成是否打开网页
+      host: '0.0.0.0', // 指定使用地址，默认localhost,0.0.0.0代表可以被外界访问
+      port: 8080, // 访问端口
+      https: false, // 编译失败时刷新页面
+      hot: true, // 开启热加载
+      hotOnly: false,
+      proxy:null,
+      proxy: {
+        '/devapi': {
+          target: 'http://www.web-jshtml.cn/dependenciesapi/token',//这里后台的地址模拟的;应该填写你们真实的后台接口
+          changOrigin: true,//允许跨域
+          pathRewrite: {
+              '^/devapi': ''//请求的时候使用这个api就可以
+          }
+      }
+    },
     overlay: { // 全屏模式下是否显示脚本错误
       warnings: true,
       errors: true

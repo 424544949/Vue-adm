@@ -1,15 +1,12 @@
 <template>
-    <div id="user">
+    <div id="User">
         user
     </div> 
 </template>
 <script>
 export default {
-    name:'user',
+    name:'User',
     setup(props,{ root }){
-        return {
-            
-        }
     }
 }
 </script>

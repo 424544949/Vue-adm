@@ -10,11 +10,22 @@ module.exports = {
    * webpack配置,see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
    **/
   chainWebpack: (config) => {
+    const svgRule = config.module.rule("svg");     
+          svgRule.uses.clear();     
+          svgRule       
+            .use("svg-sprite-loader")       
+            .loader("svg-sprite-loader")       
+            .options({         
+              symbolId: "icon-[name]",         
+              include: ["./src/icons"]       
+            });  
+
   },
   configureWebpack: (config) => {
     config.resolve = { // 配置解析别名
       extensions: ['.js', '.json', '.vue'],//自动添加文件名后缀
       alias: {
+        'vue' : 'vue/dist/vue.js',
         '@': path.resolve(__dirname, './src'),
         'public': path.resolve(__dirname, './public'),
         'components': path.resolve(__dirname, './src/components'),
@@ -66,7 +77,7 @@ module.exports = {
       proxy:null,
       proxy: {
         '/devapi': {
-          target: 'http://www.web-jshtml.cn/dependenciesapi',//这里后台的地址模拟的;应该填写你们真实的后台接口
+          target: 'http://www.web-jshtml.cn/dependenciesapi/token',//这里后台的地址模拟的;应该填写你们真实的后台接口
           changOrigin: true,//允许跨域
           pathRewrite: {
               '^/devapi': ''//请求的时候使用这个api就可以

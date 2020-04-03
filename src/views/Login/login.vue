@@ -181,23 +181,18 @@ import { getSms, Register, Login} from '@/api/login';
           code: ruleForm.code,
           module: model.value
         }
-        Login(requestdata).then(response => {
-            let data = response.data;
+        root.$store.dispatch('app/login',requestdata).then(response => {
+          let data = response.data;
             root.$message({
               message: data.message,
               type:'success'
             })
-            console.log('登录返回的信息')
-            console.log(response)
-            console.log('登录返回的信息')
             //页面跳转
             root.$router.push({
               name :'Console',
             })
         }).catch(error => {
-          console.log('登录报错的信息')                  
           console.log(error)
-          console.log('登录报错的信息')
         })
       })
       //注册
